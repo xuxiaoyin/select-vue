@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<script src="vue.js" type="text/javascript"></script>
+<style>
+	ul{ margin: 0; padding: 0; list-style: none;}
+	.out-box{ width: 500px; height: 500px; padding-top: 100px; background: url(images/select_bg.png);}
+	.inner-box{ width: 340px; background: #e4e4fe; margin:0 auto; border-radius: 16px; padding: 5px; border:1px solid #3736ae;}
+	.sel-box .show-area{ width: 210px; height: 36px; border-radius: 18px; border: none; outline: none; border: 1px solid #c9c9d5; background-color: #d9d9e2 ; padding: 0 10px 0 40px; background-image: url(images/select_search.png); background-repeat: no-repeat; background-position: 10px center;}
+	.search-btn{ margin-left: 8px; height: 38px; width: 62px; border: none; background: #fd635e; color: #fff; border-radius: 18px;}
+	.sel-list{ margin-top: 4px;}
+	.sel-list li{ height: 30px; line-height: 30px; margin: 2px 0; width: 220px; padding: 0 20px;}
+	.sel-list .active,.sel-list li:hover{ background: #fd635e; color: #fff; border-radius: 15px; cursor: default;}
+</style>
+
+<body>
+	<div id="wrap">
+		<div style="float: left; margin-right: 20px;">
+			<h1>自定义的下拉框</h1>
+			<custom-select btn-val="查询" v-bind:list='list1'></custom-select>
+		</div>
+		
+		<div style="float: left;">
+			<h1>自定义的下拉框</h1>
+			<custom-select btn-val="搜索" v-bind:list='list2'></custom-select>
+		</div>
+	</div>
+<script>
+	Vue.component('customSelect',{
+		data:function(){
+			return {
+				selectShow:false,
+				val:''
+			}
+		},
+		props:['btnVal','list'],
+		template:`<section class="out-box">
+					<div class="inner-box">
+						<div class="sel-box">
+							<input type="text" class="show-area" 
+							v-on:click="selectShow=!selectShow"
+							v-bind:value='val'
+							/>
+							<button class="search-btn">{{btnVal}}</button>
+						</div>
+						<custom-list v-show='selectShow'  v-bind:list='list' v-on:reviceval='changeVal'></custom-list>				
+					</div>	
+				</section>`,
+		methods:{
+			changeVal:function(value){
+				this.val=value;
+				this.selectShow=false;
+			}
+		}
+	});
+	
+	Vue.component('customList',{
+		props:['list'],
+		template:`<ul class="sel-list" >
+					<li v-for='item of list' v-on:click="selectHandel(item)">{{item}}</li>
+				</ul>`,
+		methods:{
+			selectHandel:function(item){
+				this.$emit('reviceval',item)
+			}
+		}
+	})
+	
+	new Vue({
+		el:'#wrap',
+		data:{
+			list1:['北京','上海','广州'],
+			list2:['2018-10-01','2018-10-02','2018-10-03']
+		}
+	})
+</script>
+
+
+</body>
+</html>
